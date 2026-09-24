@@ -80,6 +80,8 @@ A API ficará disponível em:
 http://localhost:3000
 ```
 
-## Autora
+## Integrantes
 
-Clerciane Lopes
+- Clerciane Lopes Pereira dos Santos
+- Luzia de Sousa dos Santos
+- Andressa Cristina Lima da Silva
