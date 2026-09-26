@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const openapiDocument = require("./docs/openapi");
+require("dotenv").config();
 
 const prisma = require("./config/prisma");
 const profileRoutes = require("./routes/profileRoutes");
