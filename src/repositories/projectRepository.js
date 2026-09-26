@@ -37,13 +37,23 @@ async function create(data) {
   });
 }
 
-async function findAll() {
-  return prisma.project.findMany({
-    include: projectRelations,
-    orderBy: {
-      createdAt: "desc"
-    }
-  });
+async function findAll({ technology, page, limit }) {
+  const where = technology
+    ? { technologies: { some: { name: technology } } }
+    : {};
+
+  const [projects, total] = await Promise.all([
+    prisma.project.findMany({
+      where,
+      include: projectRelations,
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * limit,
+      take: limit
+    }),
+    prisma.project.count({ where })
+  ]);
+
+  return { projects, total };
 }
 
 async function findProfileById(id) {
@@ -63,8 +73,17 @@ async function findTechnologiesByIds(ids) {
     select: { id: true }
   });
 }
+async function incrementUpvotes(id) {
+  return prisma.project.update({
+    where: { id },
+    data: {
+      upvotes: { increment: 1 }
+    }
+  });
+}
 
 module.exports = {
+ incrementUpvotes,
   create,
   findAll,
   findProfileById,

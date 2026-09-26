@@ -28,17 +28,42 @@ async function createProject(data) {
     ...data,
     technologyIds: uniqueTechnologyIds
   });
-
   return projectOutputDto(project);
 }
 
-async function listProjects() {
-  const projects = await projectRepository.findAll();
+async function listProjects(filters) {
+  const { projects, total } = await projectRepository.findAll(filters);
 
-  return projects.map(projectOutputDto);
+  return {
+    page: filters.page,
+    limit: filters.limit,
+    total,
+    totalPages: Math.ceil(total / filters.limit),
+    data: projects.map(projectOutputDto)
+  };
+}
+async function upvoteProject(id) {
+  try {
+    const project = await projectRepository.incrementUpvotes(id);
+
+    return {
+      id: project.id,
+      title: project.title,
+      upvotes: project.upvotes
+    };
+  } catch (error) {
+    if (error.code === "P2025") {
+      const notFound = new Error("Projeto não encontrado.");
+      notFound.statusCode = 404;
+      throw notFound;
+    }
+
+    throw error;
+  }
 }
 
 module.exports = {
+ upvoteProject,
   createProject,
   listProjects
 };

@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config();
+const swaggerUi = require("swagger-ui-express");
+const openapiDocument = require("./docs/openapi");
 
 const prisma = require("./config/prisma");
 const profileRoutes = require("./routes/profileRoutes");
@@ -13,6 +14,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openapiDocument));
 
 app.get("/", (req, res) => {
   return res.status(200).json({
@@ -36,6 +38,11 @@ app.get("/database-test", async (req, res, next) => {
 app.use("/api/profiles", profileRoutes);
 app.use("/api/technologies", technologyRoutes);
 app.use("/api/projects", projectRoutes);
+app.use((req, res, next) => {
+  const error = new Error("Rota não encontrada.");
+  error.statusCode = 404;
+  next(error);
+});
 
 app.use(errorHandler);
 

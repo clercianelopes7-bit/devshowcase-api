@@ -27,6 +27,8 @@ model Project {
   profileId     Int
   profile       Profile      @relation(fields: [profileId], references: [id])
   technologies  Technology[]
+    averageRating Float @default(0)
+  upvotes       Int   @default(0)
   feedbacks     Feedback[]
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
@@ -43,7 +45,7 @@ model Feedback {
   id         Int      @id @default(autoincrement())
   authorName String
   comment    String
-  rating     Int?
+   rating     Int
   projectId  Int
   project    Project  @relation(fields: [projectId], references: [id])
   createdAt  DateTime @default(now())

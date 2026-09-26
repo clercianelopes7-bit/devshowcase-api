@@ -46,6 +46,8 @@ function projectOutputDto(project) {
     profile: project.profile,
     technologies: project.technologies,
     feedbacks: project.feedbacks,
+    averageRating: project.averageRating,
+upvotes: project.upvotes,
     createdAt: project.createdAt,
     updatedAt: project.updatedAt
   };
